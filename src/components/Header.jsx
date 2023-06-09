@@ -1,11 +1,10 @@
-import CustomHeader from "./components/Header";
 
-function App() {
+function Header() {
   return (
     <div>
-      <CustomHeader />
+      <h2 className="">Header</h2>
     </div>
   );
 }
 
-export default App;
+export default Header;

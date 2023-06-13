@@ -1,42 +1,76 @@
 import {useState, useEffect} from "react"
 
 
-function Formulario() {
+function Formulario({pacientes, setPacientes}) {
 
   const [nombre, setNombre] = useState('')
+  const [propietario, setPropietario] = useState('')
+  const [email, setEmail] = useState('')
+  const [fecha, setFecha] = useState('')
+  const [sintomas, setSintomas] = useState('')
 
+  const [error, setError] = useState(false)
+
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+  if([nombre, propietario, email, fecha, sintomas].includes('')){
+    console.log('campovacio')
+    setError(true)
+    return;
+  }else {
+    setError(false)
+    //objeto de paciente
+    const objPaciente = {
+      nombre,
+      propietario,
+      email,
+      fecha,
+      sintomas
+    }
+    //console.log(objPaciente)
+    setPacientes([...pacientes, objPaciente])
+  }
+ 
+  }
 
   return (
-    <div className="md:w-1/2 lg:w-2/5">
+    <div className="md:w-1/2 mb-5 lg:w-2/5">
       <h2 className="font-black text-3xl text-center">Seguimiento pacientes</h2>
       <p className="text-lg mt-5 mb-10 text-center">
         Añade pacientes y {""}
         <span className="text-indigo-600 font-bold ">Administralos</span>
       </p>
-      <form className="bg-white shadow-md rounded-lg py-10 px-5">
+      {error && (
+        <div className="bg-red-500 rounded-lg font-black p-2 text-center">
+          <p>Todos los espacios son obligatorios</p>
+        </div>
+      ) }
+      <form 
+      onSubmit = {handleSubmit}
+      className="bg-white shadow-md rounded-lg py-10 px-5">
         <div className="mb-4">
-          <label htmlFor="mascota" className="block font-bold text-gray-600 uppercase">Nombre Mascota </label>
-          <input id="mascota" type="text" placeholder="Nombre de la mascota" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" />
+          <label htmlFor="mascota" className="block font-bold text-gray-600 uppercase">Nombre Mascota: {nombre}</label>
+          <input id="mascota" type="text" placeholder="Nombre de la mascota" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" value={nombre} onChange={(e) => setNombre(e.target.value)} />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="propietario" className="block font-bold text-gray-600 uppercase">Nombre Mascota </label>
-          <input id="propietario" type="text" placeholder="Nombre del propitario" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" />
+          <label htmlFor="propietario" className="block font-bold text-gray-600 uppercase">Nombre propietario </label>
+          <input id="propietario" type="text" placeholder="Nombre del propitario" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" value={propietario} onChange={(e) => setPropietario(e.target.value)}/>
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="block font-bold text-gray-600 uppercase"> Email </label>
-          <input id="email" type="text" placeholder="Nombre del propitario" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" />
+          <label htmlFor="email" className="block font-bold text-gray-600 uppercase"> Email: </label>
+          <input id="email" type="text" placeholder="Nombre del propitario" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" value={email} onChange={(e) => setEmail(e.target.value)}/>
         </div>
 
         <div className="mb-4">
           <label htmlFor="alta" className="block font-bold text-gray-600 uppercase"> Alta </label>
-          <input id="alta" type="date" placeholder="Nombre del propitario" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" />
+          <input id="alta" type="date" placeholder="Nombre del propitario" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" value={fecha} onChange={(e) => setFecha(e.target.value)}/>
         </div>
 
         <div className="mb-4">
           <label htmlFor="sintomas" className="block font-bold text-gray-600 uppercase"> Alta </label>
-          <textarea id="sintomas" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" placeholder="Describe los sintomas">
+          <textarea id="sintomas" className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg" placeholder="Describe los sintomas" value={sintomas} onChange={(e) => setSintomas(e.target.value)}>
 
           </textarea>
         </div>

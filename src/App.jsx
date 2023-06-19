@@ -7,6 +7,8 @@ function App() {
 
   const [pacientes, setPacientes] = useState([])
 
+
+  
   return (
     <div className="container mx-auto mt-20">
       <Header />
@@ -15,7 +17,9 @@ function App() {
         pacientes={pacientes}
         setPacientes={setPacientes}
         />
-      <ListadoPacientees />
+      <ListadoPacientees 
+        pacientes={pacientes}
+      />
       </div>
 
     </div>

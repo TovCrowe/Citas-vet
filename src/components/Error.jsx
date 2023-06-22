@@ -5,7 +5,9 @@ function Error({children}) {
       <p>{children}</p>
     </div>
   )
-}
+} //Error
+
+
 
 export default Error
   

@@ -1,8 +1,7 @@
-import { PropTypes } from 'prop-types';
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-function Formulario({ pacientes, setPacientes }) {
+function Formulario({ pacientes, setPacientes, paciente }) {
   
   const [nombre, setNombre] = useState(""); //estado inicial
   const [propietario, setPropietario] = useState(""); //estado inicial
@@ -19,6 +18,7 @@ function Formulario({ pacientes, setPacientes }) {
     return random + fecha;
   }; //genera un id aleatorio
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if ([nombre, propietario, email, fecha, sintomas].includes("")) {
@@ -159,10 +159,5 @@ function Formulario({ pacientes, setPacientes }) {
   );
 }
 
-Formulario.propTypes = {
-  pacientes: PropTypes.array.isRequired,
-  setPacientes: PropTypes.func.isRequired,
-  
-};
 
 export default Formulario;

@@ -1,15 +1,15 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
 function Formulario({ pacientes, setPacientes, paciente }) {
-  
   const [nombre, setNombre] = useState(""); //estado inicial
   const [propietario, setPropietario] = useState(""); //estado inicial
   const [email, setEmail] = useState("");
   const [fecha, setFecha] = useState("");
   const [sintomas, setSintomas] = useState("");
 
-  const [error, setError] = useState(false); 
+  const [error, setError] = useState(false);
 
   const gnrtId = () => {
     const random = Math.random().toString(36).substr(2); //genera un numero aleatorio
@@ -18,11 +18,19 @@ function Formulario({ pacientes, setPacientes, paciente }) {
     return random + fecha;
   }; //genera un id aleatorio
 
-  
+  useEffect(() => {
+    if (Object.keys(paciente).length > 0) {
+      setNombre(paciente.nombre);
+      setPropietario(paciente.propietario);
+      setEmail(paciente.email);
+      setFecha(paciente.fecha);
+      setSintomas(paciente.sintomas);
+    }
+  }, [paciente]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if ([nombre, propietario, email, fecha, sintomas].includes("")) {
-      console.log("campovacio");
       setError(true);
       return;
     } else {
@@ -33,19 +41,26 @@ function Formulario({ pacientes, setPacientes, paciente }) {
         propietario,
         email,
         fecha,
-        sintomas,
-        Id: gnrtId(),
+        sintomas
       };
-      //console.log(objPaciente)
-      setPacientes([...pacientes, objPaciente]); //agrega el objeto al arreglo
 
+      if (paciente.Id) {
+        objPaciente.Id = paciente.Id;
+        const pacientesActualizados = pacientes.map((pacienteState) =>
+          pacienteState.Id === paciente.Id ? objPaciente : pacienteState
+        );
+      
+        setPacientes(pacientesActualizados);
+      } else{
+      objPaciente.Id = gnrtId();
+      setPacientes([...pacientes, objPaciente]); //agrega el objeto al arreglo
+    }
 
       setNombre("");
       setEmail("");
       setFecha("");
       setSintomas("");
       setPropietario("");
-
     }
   }; //envia los datos al arreglo
 
@@ -56,8 +71,8 @@ function Formulario({ pacientes, setPacientes, paciente }) {
         Añade pacientes y {""}
         <span className="text-indigo-600 font-bold ">Administralos</span>
       </p>
-      {error && <Error>{<p>Todos los campos son necesarios</p>}</Error>} {/*muestra el error */}
-      
+      {error && <Error>{<p>Todos los campos son necesarios</p>}</Error>}{" "}
+      {/*muestra el error */}
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg py-10 px-5"
@@ -152,12 +167,11 @@ function Formulario({ pacientes, setPacientes, paciente }) {
         <input
           type="submit"
           className="w-full bg-indigo-600 p-3 text-white uppercase font-bold rounded-lg hover:bg-indigo-700 cursor-pointer transition-all"
-          value="agregar paciente"
+          value={paciente.Id ? 'editar paciente' : 'Agregar paciente'}
         />
       </form>
-    </div> 
+    </div>
   );
 }
-
 
 export default Formulario;

@@ -1,23 +1,51 @@
 import Formulario from "./components/Formulario"
 import Header from "./components/Header"
 import ListadoPacientees from "./components/ListadoPacientees"
+import { fetchPatients, createPatient, updatePatient, deletePatient } from "./Data/DataFetch"
 import {useEffect, useState} from "react"
 
 function App() {
 
-  const [pacientes, setPacientes] = useState(JSON.parse(localStorage.getItem('pacientes'))??[]) //estado inicial
+  const [pacientes, setPacientes] = useState([]) //estado inicial
   const [paciente, setPaciente] = useState({})
 
-
   useEffect(() => {
-    localStorage.setItem('pacientes', JSON.stringify(pacientes))
-  
-  }, [pacientes])
+    const obtenerPacientes = async () => {
+      try {
+        const pacientesApi = await fetchPatients();
+        setPacientes(pacientesApi);
+        console.log(pacientesApi)
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      }
+    };
 
-  const eliminarPaciente = (id) => {
-    const pacientesActualizados = pacientes.filter(paciente => paciente.Id !== id)
-    setPacientes(pacientesActualizados)
-  }
+    obtenerPacientes();
+  }, []);
+
+  const handleDeletePatient = async (id) => {
+    try {
+      await deletePatient(id);
+      setPacientes(pacientes.filter(paciente => paciente.clienteId !== id));
+      setPaciente({});
+    } catch (error) {
+      console.error("Error deleting patient:", error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
+
+  const handleCreatePatient = async (patientData) => {
+    try {
+      const newPatient = await createPatient(patientData);
+      console.log(patientData)
+      setPacientes([...pacientes, newPatient]);
+      setPaciente({});
+    } catch (error) {
+      console.error("Error creating patient:", error);
+      // Handle error (e.g., show error message to user)
+    }
+  };
+
 
   return (
     <div className="container mx-auto mt-20"> 
@@ -27,11 +55,12 @@ function App() {
         pacientes={pacientes} 
         setPacientes={setPacientes}
         paciente={paciente}
+        handleCreatePatient={handleCreatePatient}
         />
       <ListadoPacientees 
         pacientes={pacientes}
         setPaciente={setPaciente}
-        eliminarPaciente={eliminarPaciente}
+        handleDeletePatient={handleDeletePatient}
       />
       </div>
 

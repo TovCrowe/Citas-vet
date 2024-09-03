@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-function Formulario({ pacientes, setPacientes, paciente }) {
+function Formulario({ pacientes, setPacientes, paciente, handleCreatePatient }) {
   const [nombre, setNombre] = useState(""); //estado inicial
   const [propietario, setPropietario] = useState(""); //estado inicial
   const [email, setEmail] = useState("");
@@ -11,13 +11,6 @@ function Formulario({ pacientes, setPacientes, paciente }) {
 
   const [error, setError] = useState(false);
 
-  const gnrtId = () => {
-    const random = Math.random().toString(36).substr(2); //genera un numero aleatorio
-    const fecha = Date.now().toString(36); //genera un numero aleatorio
-
-    return random + fecha;
-  }; //genera un id aleatorio
-
   useEffect(() => {
     if (Object.keys(paciente).length > 0) {
       setNombre(paciente.nombre);
@@ -25,6 +18,12 @@ function Formulario({ pacientes, setPacientes, paciente }) {
       setEmail(paciente.email);
       setFecha(paciente.fecha);
       setSintomas(paciente.sintomas);
+    } else {
+      setNombre("");
+      setPropietario("");
+      setEmail("");
+      setFecha("");
+      setSintomas("");
     }
   }, [paciente]);
 
@@ -35,44 +34,29 @@ function Formulario({ pacientes, setPacientes, paciente }) {
       return;
     } else {
       setError(false);
-      //objeto de paciente
       const objPaciente = {
         nombre,
         propietario,
         email,
-        fecha,
+        fecha_de_alta: fecha,
         sintomas
       };
+      console.log(objPaciente)
 
-      if (paciente.Id) {
-        objPaciente.Id = paciente.Id;
-        const pacientesActualizados = pacientes.map((pacienteState) =>
-          pacienteState.Id === paciente.Id ? objPaciente : pacienteState
-        );
-      
-        setPacientes(pacientesActualizados);
-      } else{
-      objPaciente.Id = gnrtId();
-      setPacientes([...pacientes, objPaciente]); //agrega el objeto al arreglo
+      // Send the object to the parent component or API
+      handleCreatePatient(objPaciente);
     }
-
-      setNombre("");
-      setEmail("");
-      setFecha("");
-      setSintomas("");
-      setPropietario("");
-    }
-  }; //envia los datos al arreglo
+   
+  };
 
   return (
     <div className="md:w-1/2 mb-5 lg:w-2/5">
       <h2 className="font-black text-3xl text-center">Seguimiento pacientes</h2>
       <p className="text-lg mt-5 mb-10 text-center">
         Añade pacientes y {""}
-        <span className="text-indigo-600 font-bold ">Administralos</span>
+        <span className="text-indigo-600 font-bold">Adminístralos</span>
       </p>
       {error && <Error>{<p>Todos los campos son necesarios</p>}</Error>}{" "}
-      {/*muestra el error */}
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg py-10 px-5"
@@ -99,12 +83,12 @@ function Formulario({ pacientes, setPacientes, paciente }) {
             htmlFor="propietario"
             className="block font-bold text-gray-600 uppercase"
           >
-            Nombre propietario{" "}
+            Nombre propietario
           </label>
           <input
             id="propietario"
             type="text"
-            placeholder="Nombre del propitario"
+            placeholder="Nombre del propietario"
             className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg"
             value={propietario}
             onChange={(e) => setPropietario(e.target.value)}
@@ -116,13 +100,12 @@ function Formulario({ pacientes, setPacientes, paciente }) {
             htmlFor="email"
             className="block font-bold text-gray-600 uppercase"
           >
-            {" "}
-            Email:{" "}
+            Email:
           </label>
           <input
             id="email"
             type="text"
-            placeholder="Nombre del propitario"
+            placeholder="Correo electrónico"
             className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -134,13 +117,12 @@ function Formulario({ pacientes, setPacientes, paciente }) {
             htmlFor="alta"
             className="block font-bold text-gray-600 uppercase"
           >
-            {" "}
-            Alta{" "}
+            Alta
           </label>
           <input
             id="alta"
             type="date"
-            placeholder="Nombre del propitario"
+            placeholder="Fecha de alta"
             className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)}
@@ -152,13 +134,12 @@ function Formulario({ pacientes, setPacientes, paciente }) {
             htmlFor="sintomas"
             className="block font-bold text-gray-600 uppercase"
           >
-            {" "}
-            Alta{" "}
+            Síntomas
           </label>
           <textarea
             id="sintomas"
             className="border-2 mt-2 w-full p-2 placeholder-gray-600 rounded-lg"
-            placeholder="Describe los sintomas"
+            placeholder="Describe los síntomas"
             value={sintomas}
             onChange={(e) => setSintomas(e.target.value)}
           ></textarea>
@@ -167,7 +148,7 @@ function Formulario({ pacientes, setPacientes, paciente }) {
         <input
           type="submit"
           className="w-full bg-indigo-600 p-3 text-white uppercase font-bold rounded-lg hover:bg-indigo-700 cursor-pointer transition-all"
-          value={paciente.Id ? 'editar paciente' : 'Agregar paciente'}
+          value={paciente.clienteId ? "Editar Paciente" : "Agregar Paciente"}
         />
       </form>
     </div>

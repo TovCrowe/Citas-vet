@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const API_URL = "http://localhost:8082/patients"; // Your backend URL
 
-// Fetch all patients
 const fetchPatients = async () => {
   try {
     const response = await axios.get(API_URL);
@@ -13,7 +11,6 @@ const fetchPatients = async () => {
   }
 };
 
-// Create a new patient
 const createPatient = async (patientData) => {
   try {
     console.log(patientData)
@@ -25,7 +22,6 @@ const createPatient = async (patientData) => {
   }
 };
 
-// Update an existing patient
 const updatePatient = async (patientId, patientData) => {
   try {
     const response = await axios.put(`${API_URL}/${patientId}`, patientData);
@@ -36,7 +32,6 @@ const updatePatient = async (patientId, patientData) => {
   }
 };
 
-// Delete a patient
 const deletePatient = async (patientId) => {
   try {
     await axios.delete(`${API_URL}/${patientId}`);

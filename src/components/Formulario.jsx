@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import Error from "./Error";
+import {  updatePatient } from "../Data/DataFetch";
+import { formattedDate } from "../Util/formattedDate";
 
-function Formulario({ pacientes, setPacientes, paciente, handleCreatePatient }) {
+function Formulario({setPaciente, paciente, handleCreatePatient, handleUpdatePatients }) {
   const [nombre, setNombre] = useState(""); //estado inicial
   const [propietario, setPropietario] = useState(""); //estado inicial
   const [email, setEmail] = useState("");
@@ -16,7 +18,7 @@ function Formulario({ pacientes, setPacientes, paciente, handleCreatePatient }) 
       setNombre(paciente.nombre);
       setPropietario(paciente.propietario);
       setEmail(paciente.email);
-      setFecha(paciente.fecha);
+      setFecha(formattedDate(paciente.fecha_de_alta));
       setSintomas(paciente.sintomas);
     } else {
       setNombre("");
@@ -27,9 +29,23 @@ function Formulario({ pacientes, setPacientes, paciente, handleCreatePatient }) 
     }
   }, [paciente]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if ([nombre, propietario, email, fecha, sintomas].includes("")) {
+     if (paciente.clienteId) {
+      try {
+        await updatePatient(paciente.clienteId, { nombre, propietario, email, fecha_de_alta: fecha, sintomas });
+        setNombre("");
+        setPropietario("");
+        setEmail("");
+        setFecha("");
+        setSintomas("");
+        setPaciente({});
+        await handleUpdatePatients();
+      } catch (error) {
+        console.error("Error updating patient:", error);
+      }
+    }
+    else if ([nombre, propietario, email, fecha, sintomas].includes("")) {
       setError(true);
       return;
     } else {
@@ -39,14 +55,13 @@ function Formulario({ pacientes, setPacientes, paciente, handleCreatePatient }) 
         propietario,
         email,
         fecha_de_alta: fecha,
-        sintomas
+        sintomas,
       };
-      console.log(objPaciente)
+      console.log(objPaciente);
 
       // Send the object to the parent component or API
       handleCreatePatient(objPaciente);
     }
-   
   };
 
   return (

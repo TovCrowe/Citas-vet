@@ -1,15 +1,11 @@
 /* eslint-disable react/prop-types */
-import { fetchPatients } from '../Data/DataFetch';
+
 import Paciente from './Paciente';
 import { useEffect } from 'react';
 
 function ListadoPacientes({ pacientes, setPaciente, handleDeletePatient }) {
  
 
-  useEffect(() => {
-    fetchPatients();
-  }, []);
-  console.log(pacientes)
 
 
   return (

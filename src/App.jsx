@@ -1,12 +1,12 @@
 import Formulario from "./components/Formulario"
 import Header from "./components/Header"
 import ListadoPacientees from "./components/ListadoPacientees"
-import { fetchPatients, createPatient, updatePatient, deletePatient } from "./Data/DataFetch"
+import { fetchPatients, createPatient, deletePatient } from "./Data/DataFetch"
 import {useEffect, useState} from "react"
 
 function App() {
 
-  const [pacientes, setPacientes] = useState([]) //estado inicial
+  const [pacientes, setPacientes] = useState([]) 
   const [paciente, setPaciente] = useState({})
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function App() {
       setPaciente({});
     } catch (error) {
       console.error("Error deleting patient:", error);
-      // Handle error (e.g., show error message to user)
+      
     }
   };
 
@@ -42,20 +42,27 @@ function App() {
       setPaciente({});
     } catch (error) {
       console.error("Error creating patient:", error);
-      // Handle error (e.g., show error message to user)
+      
     }
   };
 
-
+  const handleUpdatePatients = async () => {
+    try {
+      const pacientesApi = await fetchPatients();
+      setPacientes(pacientesApi);
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+    }
+  };
   return (
     <div className="container mx-auto mt-20"> 
       <Header /> 
       <div className="mt-12 md:flex"> 
       <Formulario 
-        pacientes={pacientes} 
-        setPacientes={setPacientes}
-        paciente={paciente}
-        handleCreatePatient={handleCreatePatient}
+     setPaciente={setPaciente}
+     paciente={paciente}
+     handleCreatePatient={handleCreatePatient}
+     handleUpdatePatients={handleUpdatePatients}
         />
       <ListadoPacientees 
         pacientes={pacientes}

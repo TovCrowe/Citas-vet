@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const API_URL = "https://vet-backend-e9d9.onrender.com/patients"; 
 
 const fetchPatients = async () => {
   try {

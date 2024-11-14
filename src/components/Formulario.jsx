@@ -12,7 +12,7 @@ function Formulario({setPaciente, paciente, handleCreatePatient, handleUpdatePat
   const [sintomas, setSintomas] = useState("");
 
   const [error, setError] = useState(false);
-
+  
   useEffect(() => {
     if (Object.keys(paciente).length > 0) {
       setNombre(paciente.nombre);

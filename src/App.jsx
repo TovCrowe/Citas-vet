@@ -14,7 +14,7 @@ function App() {
       try {
         const pacientesApi = await fetchPatients();
         setPacientes(pacientesApi);
-        console.log(pacientesApi)
+
       } catch (error) {
         console.error("Error fetching patients:", error);
       }
